@@ -2,9 +2,15 @@ module icu.bughub.app/ipc-tool
 
 go 1.18
 
-require github.com/wailsapp/wails/v2 v2.3.1
+require (
+	github.com/avast/apkparser v0.0.0-20230614091518-10cb8617da43
+	github.com/wailsapp/wails/v2 v2.3.1
+)
+
+require github.com/klauspost/compress v1.16.6 // indirect
 
 require (
+	github.com/avast/apkverifier v0.0.0-20230614091700-49ed19602069
 	github.com/bep/debounce v1.2.1 // indirect
 	github.com/go-ole/go-ole v1.2.6 // indirect
 	github.com/google/uuid v1.1.2 // indirect

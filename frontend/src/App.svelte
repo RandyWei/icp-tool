@@ -1,12 +1,19 @@
 <script lang="ts">
   import logo from "./assets/images/logo-universal.png";
-  import { Greet } from "../wailsjs/go/parser/App.js";
+  import { Greet, Parse } from "../wailsjs/go/parser/App.js";
 
   let resultText: string = "Please enter your name below 👇";
   let name: string;
 
   function greet(): void {
     Greet(name).then((result) => (resultText = result));
+    Parse("/Users/wei/Downloads/com.chinahrt.app.gpjw_1.0.22.apk")
+      .then((result) => {
+        console.log(result);
+      })
+      .catch((e) => {
+        console.error(e);
+      });
   }
 </script>
 
