@@ -1,9 +1,9 @@
 package model
 
 type Feature struct {
-	Id        string //package或bundle id
-	Name      string //名称
-	Icon      string //图标；base64
-	PublicKey string //公钥
-	MD5       string //签名
+	Id        string `json:"id"`        //package或bundle id
+	Name      string `json:"name"`      //名称
+	Icon      string `json:"icon"`      //图标；base64
+	PublicKey string `json:"publicKey"` //公钥
+	MD5       string `json:"md5"`       //签名
 }
