@@ -3,6 +3,8 @@
   import type { model } from "wailsjs/go/models";
   import { onMount } from "svelte";
   import * as wailsRuntime from "../wailsjs/runtime/runtime";
+  import { dialogs } from "svelte-dialogs";
+  // import { toast } from "@zerodevx/svelte-toast";
 
   enum EventName {
     Parser = "parser",
@@ -16,14 +18,14 @@
   }
 
   let currentStatus: Status = Status.Default;
-  let apkFeature: model.Feature;
+  let features = new Array<model.Feature>();
 
   function greet(): void {
     currentStatus = Status.Loading;
     ParseApk("/Users/wei/Downloads/com.chinahrt.app.gpjw_1.0.22.apk")
       .then((result) => {
         console.log(result);
-        apkFeature = result;
+        features.push(result);
         currentStatus = Status.Result;
       })
       .catch((e) => {
@@ -67,7 +69,16 @@
       switch (data.status) {
         case Status.Result:
           currentStatus = Status.Result;
-          apkFeature = data.data;
+          features.push(data.data);
+
+          // toast.push("保存成功", {
+          //   theme: {
+          //     "--toastBarHeight": 0,
+          //     "--toastColor": "mintcream",
+          //     "--toastBackground": "rgba(0,255,0,0.9)",
+          //     "--toastBarBackground": "red",
+          //   },
+          // });
           break;
         case Status.Loading:
           currentStatus = Status.Loading;
@@ -101,15 +112,19 @@
     {:else if currentStatus == Status.Error}
       <div id="tip">解析失败，请重新尝试</div>
     {:else}
-      <div id="result">
-        <div class="line">
-          <img src="data:image/png;base64,{apkFeature.icon}" alt="" />
+      {#each features as apkFeature}
+        <div id="result">
+          <div class="line">
+            <img src="data:image/png;base64,{apkFeature.icon}" alt="" />
+          </div>
+          <div class="line">APP名称：{apkFeature.name}</div>
+          <div class="line">Bundle Id：{apkFeature.id}</div>
+          <div class="line">
+            证书MD5指纹(签名MD5值、sha-1)：{apkFeature.md5}
+          </div>
+          <div class="line">Modulus(公钥)：{apkFeature.publicKey}</div>
         </div>
-        <div class="line">APP名称：{apkFeature.name}</div>
-        <div class="line">Bundle Id：{apkFeature.id}</div>
-        <div class="line">证书MD5指纹(签名MD5值、sha-1)：{apkFeature.md5}</div>
-        <div class="line">Modulus(公钥)：{apkFeature.publicKey}</div>
-      </div>
+      {/each}
       <div id="save-container">
         <button on:click={saveToZip}>保存为zip</button>
       </div>
@@ -141,6 +156,9 @@
     padding: 0.5rem 0;
   }
   #save-container {
+    position: sticky;
+    bottom: 0;
+    left: 0;
     width: 100%;
     text-align: center;
     padding-bottom: 0.5rem;

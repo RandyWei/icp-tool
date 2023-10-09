@@ -20,6 +20,7 @@ export namespace model {
 	    icon: string;
 	    publicKey: string;
 	    md5: string;
+	    platform: string;
 	
 	    static createFrom(source: any = {}) {
 	        return new Feature(source);
@@ -32,6 +33,7 @@ export namespace model {
 	        this.icon = source["icon"];
 	        this.publicKey = source["publicKey"];
 	        this.md5 = source["md5"];
+	        this.platform = source["platform"];
 	    }
 	}
 

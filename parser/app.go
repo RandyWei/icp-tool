@@ -3,12 +3,14 @@ package parser
 import (
 	"context"
 	"fmt"
+
+	"icu.bughub.app/ipc-tool/model"
 )
 
 // App struct
 type App struct {
-	Ctx          context.Context
-	OpenFilePath string
+	Ctx      context.Context
+	Features []*model.Feature
 }
 
 // NewApp creates a new App application struct

@@ -50,7 +50,9 @@ func (app *App) ParseIpa(path string) (*model.Feature, error) {
 	if codesignPath == "" {
 		return nil, fmt.Errorf("解析失败")
 	}
-	feature := &model.Feature{}
+	feature := &model.Feature{
+		Platform: "iOS",
+	}
 	sha1, modulus := ExecOpenssl(codesignPath)
 	feature.PublicKey = modulus
 	feature.MD5 = sha1
@@ -58,6 +60,13 @@ func (app *App) ParseIpa(path string) (*model.Feature, error) {
 	feature.Name = label
 	feature.Id = packageName
 	feature.Icon = icon
+
+	features := app.Features
+	if features == nil {
+		features = make([]*model.Feature, 0)
+	}
+	app.Features = append(features, feature)
+
 	return feature, nil
 }
 

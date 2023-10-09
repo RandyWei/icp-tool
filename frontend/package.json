@@ -18,5 +18,9 @@
     "tslib": "^2.4.0",
     "typescript": "^4.6.4",
     "vite": "^3.0.0"
+  },
+  "dependencies": {
+    "svelte-dialogs": "^1.2.2",
+    "@zerodevx/svelte-toast": "^0.9.3"
   }
 }

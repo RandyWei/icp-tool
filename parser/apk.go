@@ -43,7 +43,7 @@ func (app *App) ParseApk(path string) (*model.Feature, error) {
 	certInfo, certs := apkverifier.PickBestApkCert(res.SignerCerts)
 
 	feature := new(model.Feature)
-
+	feature.Platform = "Android"
 	if publicKey, ok := certs.PublicKey.(*rsa.PublicKey); ok {
 		feature.PublicKey = strings.ToUpper(publicKey.N.String())
 	}
@@ -51,6 +51,13 @@ func (app *App) ParseApk(path string) (*model.Feature, error) {
 	feature.Icon = getIconData(optionalZip, iconPath)
 	feature.Id = packageName
 	feature.Name = name
+
+	features := app.Features
+	if features == nil {
+		features = make([]*model.Feature, 0)
+	}
+	app.Features = append(features, feature)
+
 	return feature, nil
 }
 
