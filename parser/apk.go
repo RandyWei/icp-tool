@@ -15,7 +15,11 @@ import (
 	"icu.bughub.app/ipc-tool/model"
 )
 
-func (app *App) Parse(path string) (*model.Feature, error) {
+func (app *App) Test() *model.EventData {
+	return nil
+}
+
+func (app *App) ParseApk(path string) (*model.Feature, error) {
 	f, err := os.Open(path)
 	if err != nil {
 		return nil, fmt.Errorf("文件打开错误")

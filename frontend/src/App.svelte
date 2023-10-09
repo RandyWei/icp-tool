@@ -1,16 +1,18 @@
 <script lang="ts">
-  import logo from "./assets/images/logo-universal.png";
-  import { Parse } from "../wailsjs/go/parser/App.js";
+  import { ParseApk } from "../wailsjs/go/parser/App.js";
   import type { model } from "wailsjs/go/models";
+  import { onMount } from "svelte";
+  import * as wailsRuntime from "../wailsjs/runtime/runtime";
 
-  let resultText: string = "Please enter your name below 👇";
-  let name: string;
+  enum EventName {
+    Parser = "parser",
+  }
 
   enum Status {
-    Default,
-    Loading,
-    Result,
-    Error,
+    Default = "default",
+    Loading = "loading",
+    Result = "result",
+    Error = "error",
   }
 
   let currentStatus: Status = Status.Default;
@@ -18,7 +20,7 @@
 
   function greet(): void {
     currentStatus = Status.Loading;
-    Parse("/Users/wei/Downloads/com.chinahrt.app.gpjw_1.0.22.apk")
+    ParseApk("/Users/wei/Downloads/com.chinahrt.app.gpjw_1.0.22.apk")
       .then((result) => {
         console.log(result);
         apkFeature = result;
@@ -30,13 +32,67 @@
       });
   }
 
+  /**
+   * 允许拖拽
+   * @param event
+   */
+  var allowDrop = function (event: DragEvent) {
+    event.preventDefault();
+  };
+
+  /**
+   * 拖拽完成
+   * @param event
+   */
+  function drop(event: DragEvent) {
+    event.preventDefault();
+    let files = event.dataTransfer.files;
+    if (files.length > 0) {
+      const file = files[0];
+      const reader = new FileReader();
+
+      reader.onload = function (e: ProgressEvent<FileReader>) {
+        const fileContent = e.target.result as ArrayBuffer;
+        console.log(fileContent);
+      };
+      reader.readAsArrayBuffer(file);
+    }
+  }
+
   function saveToZip() {}
+
+  function initEventListener() {
+    //监听解析事件
+    wailsRuntime.EventsOn(EventName.Parser, (data: model.EventData) => {
+      switch (data.status) {
+        case Status.Result:
+          currentStatus = Status.Result;
+          apkFeature = data.data;
+          break;
+        case Status.Loading:
+          currentStatus = Status.Loading;
+          break;
+        case Status.Error:
+          currentStatus = Status.Error;
+          break;
+        default:
+          currentStatus = Status.Default;
+          break;
+      }
+    });
+  }
+
+  onMount(function () {
+    //注册拖拽事件
+    // let dropArea = document.querySelector("#container");
+    // dropArea.addEventListener("drop", drop);
+    // dropArea.addEventListener("dragover", allowDrop);
+
+    initEventListener();
+  });
 </script>
 
 <main>
-  <div class="input-box" id="input">
-    <button class="btn" on:click={greet}>Greet</button>
-  </div>
   <div id="container">
     {#if currentStatus == Status.Default}
       <div id="tip">请将ipa包拖进来</div>

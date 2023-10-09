@@ -6,6 +6,10 @@ export function Greet(arg1) {
   return window['go']['parser']['App']['Greet'](arg1);
 }
 
-export function Parse(arg1) {
-  return window['go']['parser']['App']['Parse'](arg1);
+export function ParseApk(arg1) {
+  return window['go']['parser']['App']['ParseApk'](arg1);
+}
+
+export function Test() {
+  return window['go']['parser']['App']['Test']();
 }

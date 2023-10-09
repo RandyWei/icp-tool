@@ -4,4 +4,6 @@ import {model} from '../models';
 
 export function Greet(arg1:string):Promise<string>;
 
-export function Parse(arg1:string):Promise<model.Feature>;
+export function ParseApk(arg1:string):Promise<model.Feature>;
+
+export function Test():Promise<model.EventData>;

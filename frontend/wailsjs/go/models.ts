@@ -1,5 +1,19 @@
 export namespace model {
 	
+	export class EventData {
+	    status: string;
+	    data: any;
+	
+	    static createFrom(source: any = {}) {
+	        return new EventData(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.status = source["status"];
+	        this.data = source["data"];
+	    }
+	}
 	export class Feature {
 	    id: string;
 	    name: string;
