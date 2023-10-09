@@ -6,4 +6,6 @@ export function Greet(arg1:string):Promise<string>;
 
 export function ParseApk(arg1:string):Promise<model.Feature>;
 
+export function ParseIpa(arg1:string):Promise<model.Feature>;
+
 export function Test():Promise<model.EventData>;

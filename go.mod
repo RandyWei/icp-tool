@@ -4,7 +4,9 @@ go 1.18
 
 require (
 	github.com/avast/apkparser v0.0.0-20230614091518-10cb8617da43
+	github.com/poolqa/CgbiPngFix v0.0.0-20211024081647-8ad4fb5c23e4
 	github.com/wailsapp/wails/v2 v2.3.1
+	howett.net/plist v1.0.0
 )
 
 require github.com/klauspost/compress v1.16.6 // indirect

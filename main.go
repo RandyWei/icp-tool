@@ -34,9 +34,19 @@ func main() {
 	fileSubMenu.AddText("打开文件", keys.CmdOrCtrl("o"), func(cd *menu.CallbackData) {
 		filePath, err := wailsRuntime.OpenFileDialog(app.Ctx, wailsRuntime.OpenDialogOptions{
 			Title: "打开文件",
+			Filters: []wailsRuntime.FileFilter{
+				{
+					Pattern: "*.ipa;*.apk",
+				},
+			},
 		})
 		if err != nil {
 			fmt.Printf("err:%T\n", err)
+			return
+		}
+
+		if strings.TrimSpace(filePath) == "" {
+			return
 		}
 
 		event := model.Event{
@@ -49,33 +59,37 @@ func main() {
 		//通知前端文件加载中
 		event.Send()
 
+		var feature *model.Feature
+
 		if strings.HasSuffix(filePath, ".apk") {
-			f, err := app.ParseApk(filePath)
-			//得到结果后也需要通知前端
-			if err != nil {
-				event := model.Event{
-					Ctx:  app.Ctx,
-					Name: model.Event_PRRSER,
-					Data: model.EventData{
-						Status: model.Event_PARSER_ERROR,
-						Data:   "解析出错",
-					},
-				}
-				event.Send()
-				return
-			}
+			feature, err = app.ParseApk(filePath)
+
+		} else {
+			feature, err = app.ParseIpa(filePath)
+		}
+
+		//得到结果后也需要通知前端
+		if err != nil {
 			event := model.Event{
 				Ctx:  app.Ctx,
 				Name: model.Event_PRRSER,
 				Data: model.EventData{
-					Status: model.Event_PARSER_RESULT,
-					Data:   f,
+					Status: model.Event_PARSER_ERROR,
+					Data:   "解析出错",
 				},
 			}
 			event.Send()
-		} else {
-			// app.ParseIpa(filePath)
+			return
 		}
+		event = model.Event{
+			Ctx:  app.Ctx,
+			Name: model.Event_PRRSER,
+			Data: model.EventData{
+				Status: model.Event_PARSER_RESULT,
+				Data:   feature,
+			},
+		}
+		event.Send()
 	})
 
 	// Create application with options
