@@ -45,7 +45,13 @@ func (app *App) ParseIpa(path string) (*model.Feature, error) {
 	if err != nil {
 		return nil, err
 	}
-	fmt.Println(appPath)
+
+	//删除解压缓存目录
+	defer func() {
+		//从xxx.app回退两级获取到xxxx.ipa目录进行删除
+		ipaPath := filepath.Dir(filepath.Dir(appPath))
+		os.RemoveAll(ipaPath)
+	}()
 	codesignPath := ExecCodesign(appPath)
 	if codesignPath == "" {
 		return nil, fmt.Errorf("解析失败")
