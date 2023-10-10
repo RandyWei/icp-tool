@@ -52,14 +52,17 @@ func (app *App) ParseIpa(path string) (*model.Feature, error) {
 		ipaPath := filepath.Dir(filepath.Dir(appPath))
 		os.RemoveAll(ipaPath)
 	}()
-	codesignPath := ExecCodesign(appPath)
-	if codesignPath == "" {
+	codesignPath, err := ExecCodesign(appPath)
+	if err != nil {
 		return nil, fmt.Errorf("解析失败")
 	}
 	feature := &model.Feature{
 		Platform: "iOS",
 	}
-	sha1, modulus := ExecOpenssl(codesignPath)
+	sha1, modulus, err := ExecOpenssl(codesignPath)
+	if err != nil {
+		return nil, err
+	}
 	feature.PublicKey = modulus
 	feature.MD5 = sha1
 	label, packageName, icon := ParsePlist(filepath.Join(appPath, "Info.plist"))
@@ -147,18 +150,33 @@ func ParsePlist(path string) (label, packageName, icon string) {
 }
 
 // openssl x509 -fingerprint -sha1 -modulus -text -noout -in codesign0
-func ExecOpenssl(path string) (sha1 string, modulus string) {
+func ExecOpenssl(path string) (sha1 string, modulus string, err error) {
 	parent := filepath.Dir(path)
-	cmd := exec.Command("openssl", "x509", "-fingerprint", "-sha1", "-modulus", "-text", "-noout", "-in", path)
+	cmd := exec.Command("openssl", "x509", "-inform", "DER", "-fingerprint", "-sha1", "-modulus", "-text", "-noout", "-in", path)
 	cmd.Dir = parent //设置工作目录，注意不要Path混淆
+
+	// out := &bytes.Buffer{}
+	// errs := &bytes.Buffer{}
+
+	// cmd.Stdout, cmd.Stderr = out, errs
+
+	// if err := cmd.Run(); err != nil {
+	// 	if len(errs.Bytes()) > 0 {
+	// 		return "", "", fmt.Errorf("error running %s (%s):\n %v", cmd.Args, err, errs.String())
+	// 	}
+	// 	return "", "", err
+	// }
+
 	output, err := cmd.CombinedOutput()
 	if err != nil {
 		return
 	}
 	//SplitN的N是截取数组长度
 	result := strings.SplitN(string(output), "\n", 3)
+	fmt.Println(result)
 	//当长度不为3时，可能是因为结果中没有3个换行符
 	if len(result) != 3 {
+		err = fmt.Errorf("结果长度有问题")
 		return
 	}
 	sha1 = strings.Split(strings.ReplaceAll(result[0], ":", ""), "=")[1]
@@ -166,16 +184,16 @@ func ExecOpenssl(path string) (sha1 string, modulus string) {
 	return
 }
 
-func ExecCodesign(path string) string {
+func ExecCodesign(path string) (string, error) {
 	parent := filepath.Dir(path)
 	cmd := exec.Command("codesign", "-d", "--extract-certificates", path)
 	cmd.Dir = parent //设置工作目录，注意不要Path混淆
 	output, err := cmd.CombinedOutput()
 	if err != nil {
-		return ""
+		return "", err
 	}
 	fmt.Println(string(output))
-	return filepath.Join(parent, "codesign0")
+	return filepath.Join(parent, "codesign0"), nil
 }
 
 func ExtraZip(path string) (string, error) {

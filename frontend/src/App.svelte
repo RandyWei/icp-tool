@@ -18,6 +18,7 @@
     Error = "error",
   }
 
+  let errorText = "";
   let supportTips = "";
   let currentStatus: Status = Status.Default;
   let features = new Array<model.Feature>();
@@ -76,6 +77,7 @@
           break;
         case Status.Error:
           currentStatus = Status.Error;
+          // errorText = data.data;
           break;
         default:
           currentStatus = Status.Default;
@@ -140,7 +142,7 @@
     {:else if currentStatus == Status.Loading}
       <div id="tip">正在解析中</div>
     {:else if currentStatus == Status.Error}
-      <div id="tip">解析失败，请重新尝试</div>
+      <div id="tip">解析失败，请重新尝试{errorText}</div>
     {:else}
       {#each features as apkFeature}
         <div id="result">

@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/wailsapp/wails/v2"
+	"github.com/wailsapp/wails/v2/pkg/logger"
 	"github.com/wailsapp/wails/v2/pkg/menu"
 	"github.com/wailsapp/wails/v2/pkg/menu/keys"
 	"github.com/wailsapp/wails/v2/pkg/options"
@@ -76,7 +77,7 @@ func main() {
 				Name: model.Event_PRRSER,
 				Data: model.EventData{
 					Status: model.Event_PARSER_ERROR,
-					Data:   "解析出错",
+					Data:   fmt.Sprintf("解析出错%@", err),
 				},
 			}
 			event.Send()
@@ -129,7 +130,7 @@ func main() {
 		}
 		event.Send()
 	})
-
+	myLog := logger.NewFileLogger("wails.log")
 	// Create application with options
 	err := wails.Run(&options.App{
 		Title:  "icp-tool",
@@ -144,6 +145,9 @@ func main() {
 		Bind: []interface{}{
 			app,
 		},
+		Logger:             myLog,
+		LogLevel:           logger.ERROR,
+		LogLevelProduction: logger.ERROR,
 	})
 
 	if err != nil {
