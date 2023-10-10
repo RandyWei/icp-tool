@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { ParseApk } from "../wailsjs/go/parser/App.js";
+  import { ParseApk, SaveToZip } from "../wailsjs/go/parser/App.js";
   import type { model } from "wailsjs/go/models";
   import { onMount } from "svelte";
   import * as wailsRuntime from "../wailsjs/runtime/runtime";

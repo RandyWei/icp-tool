@@ -92,6 +92,30 @@ func main() {
 		event.Send()
 	})
 
+	fileSubMenu.AddText("保存为zip", keys.CmdOrCtrl("s"), func(cd *menu.CallbackData) {
+
+		filePath, err := wailsRuntime.SaveFileDialog(app.Ctx, wailsRuntime.SaveDialogOptions{
+			Title: "保存文件",
+			Filters: []wailsRuntime.FileFilter{
+				{
+					Pattern: "*.zip",
+				},
+			},
+			CanCreateDirectories: true,
+			DefaultFilename:      "备案材料",
+		})
+		if err != nil {
+			fmt.Printf("err:%T\n", err)
+			return
+		}
+
+		if strings.TrimSpace(filePath) == "" {
+			return
+		}
+
+		app.SaveToZip(filePath)
+	})
+
 	// Create application with options
 	err := wails.Run(&options.App{
 		Title:  "icp-tool",

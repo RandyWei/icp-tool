@@ -14,6 +14,10 @@ export function ParseIpa(arg1) {
   return window['go']['parser']['App']['ParseIpa'](arg1);
 }
 
+export function SaveToZip(arg1) {
+  return window['go']['parser']['App']['SaveToZip'](arg1);
+}
+
 export function Test() {
   return window['go']['parser']['App']['Test']();
 }

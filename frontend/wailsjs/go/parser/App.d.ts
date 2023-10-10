@@ -8,4 +8,6 @@ export function ParseApk(arg1:string):Promise<model.Feature>;
 
 export function ParseIpa(arg1:string):Promise<model.Feature>;
 
+export function SaveToZip(arg1:string):Promise<void>;
+
 export function Test():Promise<model.EventData>;
