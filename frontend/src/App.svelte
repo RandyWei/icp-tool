@@ -132,7 +132,11 @@
 
 <main>
   <SvelteToast />
-
+  <div
+    style="color: red;background-color:bisque;width:100%;position:sticky;top:0;margin-bottom: 1.5rem;"
+  >
+    {supportTips}
+  </div>
   <div id="container">
     {#if currentStatus == Status.Default}
       <div id="tip">
@@ -154,6 +158,7 @@
             />
           </div>
           <div class="line">APP名称：{apkFeature.name}</div>
+          <div class="line">平台：{apkFeature.platform}</div>
           <div class="line">Bundle Id：{apkFeature.id}</div>
           <div class="line">
             证书MD5指纹(签名MD5值、sha-1)：{apkFeature.md5}
@@ -163,12 +168,6 @@
         </div>
       {/each}
     {/if}
-  </div>
-
-  <div
-    style="color: red;background-color:bisque;width:100%;position:sticky;bottom:0;"
-  >
-    {supportTips}
   </div>
 </main>
 
