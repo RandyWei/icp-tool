@@ -132,7 +132,11 @@
       {#each features as apkFeature}
         <div id="result">
           <div class="line">
-            <img src="data:image/png;base64,{apkFeature.icon}" alt="" />
+            <img
+              src="data:image/png;base64,{apkFeature.icon}"
+              alt=""
+              style="max-width: 5rem;max-height:5rem"
+            />
           </div>
           <div class="line">APP名称：{apkFeature.name}</div>
           <div class="line">Bundle Id：{apkFeature.id}</div>
@@ -140,6 +144,7 @@
             证书MD5指纹(签名MD5值、sha-1)：{apkFeature.md5}
           </div>
           <div class="line">Modulus(公钥)：{apkFeature.publicKey}</div>
+          <hr />
         </div>
       {/each}
     {/if}
@@ -168,17 +173,5 @@
   }
   .line {
     padding: 0.5rem 0;
-  }
-  #save-container {
-    position: sticky;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    text-align: center;
-    padding-bottom: 0.5rem;
-  }
-  button {
-    width: 50%;
-    height: 2rem;
   }
 </style>
