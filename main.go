@@ -63,9 +63,10 @@ func main() {
 
 		if strings.HasSuffix(filePath, ".apk") {
 			feature, err = app.ParseApk(filePath)
-
 		} else {
-			feature, err = app.ParseIpa(filePath)
+			if runtime.GOOS == "darwin" {
+				feature, err = app.ParseIpa(filePath)
+			}
 		}
 
 		//得到结果后也需要通知前端

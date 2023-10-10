@@ -18,6 +18,7 @@
     Error = "error",
   }
 
+  let supportTips = "";
   let currentStatus: Status = Status.Default;
   let features = new Array<model.Feature>();
 
@@ -116,14 +117,26 @@
     // dropArea.addEventListener("dragover", allowDrop);
 
     initEventListener();
+
+    wailsRuntime.Environment().then((info) => {
+      if (info.platform == "darwin") {
+        supportTips = "当前系统支持解析ipa和apk包";
+      } else if (info.platform == "windows") {
+        supportTips = "当前系统支持解析apk包";
+      }
+    });
   });
 </script>
 
 <main>
   <SvelteToast />
+
   <div id="container">
     {#if currentStatus == Status.Default}
-      <div id="tip">请将ipa包拖进来</div>
+      <div id="tip">
+        通过文件菜单->打开文件选择apk或ipa进行解析，也可以使用Ctrl/Command +
+        O快捷键
+      </div>
     {:else if currentStatus == Status.Loading}
       <div id="tip">正在解析中</div>
     {:else if currentStatus == Status.Error}
@@ -149,12 +162,22 @@
       {/each}
     {/if}
   </div>
+
+  <div
+    style="color: red;background-color:bisque;width:100%;position:sticky;bottom:0;"
+  >
+    {supportTips}
+  </div>
 </main>
 
 <style>
   main {
     display: flex;
+    flex-direction: column;
     justify-content: center;
+    align-items: center;
+    height: 100%;
+    min-height: 100%;
   }
   #container {
     width: 80%;
@@ -165,7 +188,8 @@
   }
   #tip {
     font-size: xx-large;
-    height: 100vh;
+    height: 100%;
+    max-height: 100%;
     text-align: center;
     align-items: center;
     justify-content: center;
