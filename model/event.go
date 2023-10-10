@@ -10,6 +10,7 @@ type EventName string
 
 const (
 	Event_PRRSER EventName = "parser"
+	Event_SAVE   EventName = "save"
 )
 
 type EventStatus string
@@ -18,6 +19,8 @@ const (
 	Event_PARSER_LOADING EventStatus = "loading"
 	Event_PARSER_RESULT  EventStatus = "result"
 	Event_PARSER_ERROR   EventStatus = "error"
+	Event_SAVE_SUCCESS   EventStatus = "success"
+	Event_SAVE_FAILED    EventStatus = "failed"
 )
 
 type EventData struct {

@@ -3,11 +3,12 @@
   import type { model } from "wailsjs/go/models";
   import { onMount } from "svelte";
   import * as wailsRuntime from "../wailsjs/runtime/runtime";
-  import { dialogs } from "svelte-dialogs";
-  // import { toast } from "@zerodevx/svelte-toast";
+  import { toast } from "@zerodevx/svelte-toast";
+  import { SvelteToast } from "@zerodevx/svelte-toast";
 
   enum EventName {
     Parser = "parser",
+    Save = "save",
   }
 
   enum Status {
@@ -61,8 +62,6 @@
     }
   }
 
-  function saveToZip() {}
-
   function initEventListener() {
     //监听解析事件
     wailsRuntime.EventsOn(EventName.Parser, (data: model.EventData) => {
@@ -70,15 +69,6 @@
         case Status.Result:
           currentStatus = Status.Result;
           features.push(data.data);
-
-          // toast.push("保存成功", {
-          //   theme: {
-          //     "--toastBarHeight": 0,
-          //     "--toastColor": "mintcream",
-          //     "--toastBackground": "rgba(0,255,0,0.9)",
-          //     "--toastBarBackground": "red",
-          //   },
-          // });
           break;
         case Status.Loading:
           currentStatus = Status.Loading;
@@ -88,6 +78,32 @@
           break;
         default:
           currentStatus = Status.Default;
+          break;
+      }
+    });
+
+    wailsRuntime.EventsOn(EventName.Save, (data: model.EventData) => {
+      switch (data.status) {
+        case "success":
+          console.log(data);
+          toast.push("保存成功", {
+            theme: {
+              "--toastBarHeight": 0,
+              "--toastColor": "mintcream",
+              "--toastBackground": "rgba(0,255,0,0.9)",
+              "--toastBarBackground": "red",
+            },
+          });
+          break;
+        default:
+          toast.push("保存失败", {
+            theme: {
+              "--toastBarHeight": 0,
+              "--toastColor": "mintcream",
+              "--toastBackground": "rgba(255,0,0,0.9)",
+              "--toastBarBackground": "red",
+            },
+          });
           break;
       }
     });
@@ -104,6 +120,7 @@
 </script>
 
 <main>
+  <SvelteToast />
   <div id="container">
     {#if currentStatus == Status.Default}
       <div id="tip">请将ipa包拖进来</div>
@@ -125,9 +142,6 @@
           <div class="line">Modulus(公钥)：{apkFeature.publicKey}</div>
         </div>
       {/each}
-      <div id="save-container">
-        <button on:click={saveToZip}>保存为zip</button>
-      </div>
     {/if}
   </div>
 </main>

@@ -113,7 +113,20 @@ func main() {
 			return
 		}
 
-		app.SaveToZip(filePath)
+		err = app.SaveToZip(filePath)
+		event := model.Event{
+			Ctx:  app.Ctx,
+			Name: model.Event_SAVE,
+			Data: model.EventData{
+				Status: model.Event_SAVE_SUCCESS,
+			},
+		}
+		if err != nil {
+			event.Data.Status = model.Event_SAVE_FAILED
+			event.Send()
+			return
+		}
+		event.Send()
 	})
 
 	// Create application with options
