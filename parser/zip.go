@@ -20,7 +20,6 @@ func (app *App) SaveToZip(savePath string) error {
 	if strings.Contains(fileName, ".") {
 		fileName = strings.Split(fileName, ".")[0]
 	}
-	fmt.Println("执行到这了1" + fileName)
 
 	const bundleId = "icu.bughub.app.icp_tool"
 
@@ -105,8 +104,8 @@ func (app *App) SaveToZip(savePath string) error {
 		}
 
 		// 替换文件信息中的文件名
-		fh.Name = strings.TrimPrefix(strings.TrimPrefix(path, cacheDirPath), string(filepath.Separator))
-
+		fh.Name = strings.TrimPrefix(strings.TrimPrefix(path, filepath.Dir(cacheDirPath)), string(filepath.Separator))
+		fmt.Printf("name:%s", fh.Name)
 		// 这步开始没有加，会发现解压的时候说它不是个目录
 		if fi.IsDir() {
 			fh.Name += "/"

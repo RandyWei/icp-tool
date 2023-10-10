@@ -116,8 +116,6 @@ func ParsePlist(path string) (label, packageName, icon string) {
 									return nil
 								})
 
-								fmt.Printf("iconPath:%s", iconPath)
-
 								fp, err := os.Open(iconPath)
 								if err != nil {
 									return
