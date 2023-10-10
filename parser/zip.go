@@ -69,11 +69,11 @@ func (app *App) SaveToZip(savePath string) error {
 		defer plainFile.Close()
 		//写入文件时，使用带缓存的 *Writer
 		write := bufio.NewWriter(plainFile)
-		write.WriteString(fmt.Sprintf("名称：%s\n", feature.Name))
-		write.WriteString(fmt.Sprintf("平台：%s\n", feature.Platform))
-		write.WriteString(fmt.Sprintf("Bundle Id(Package、包名)：%s\n", feature.Id))
-		write.WriteString(fmt.Sprintf("证书MD5指纹(签名MD5值、SHA-1)：%s\n", feature.MD5))
-		write.WriteString(fmt.Sprintf("Modulus(公钥)：%s\n", feature.PublicKey))
+		write.WriteString(fmt.Sprintf("名称：%s\n\n", feature.Name))
+		write.WriteString(fmt.Sprintf("平台：%s\n\n", feature.Platform))
+		write.WriteString(fmt.Sprintf("Bundle Id(Package、包名)：%s\n\n", feature.Id))
+		write.WriteString(fmt.Sprintf("证书MD5指纹(签名MD5值、SHA-1)：%s\n\n", feature.MD5))
+		write.WriteString(fmt.Sprintf("Modulus(公钥)：%s\n\n", feature.PublicKey))
 		//Flush将缓存的文件真正写入到文件中
 		write.Flush()
 	}
