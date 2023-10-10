@@ -8,6 +8,9 @@
   "frontend:dev:serverUrl": "auto",
   "author": {
     "name": "RandyWei",
-    "email": "weizhengheng@chinahrt.com"
+    "email": "smile561607154@163.com"
+  },
+  "info": {
+    "productVersion": "0.0.1"
   }
 }
