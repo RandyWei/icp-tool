@@ -39,7 +39,7 @@ codesign -d --extract-certificates xxxx.app
 - 执行以下命令获取得 sha-1 和 modulus 信息
 
 ```
-openssl x509 -fingerprint -sha1 -modulus -text -noout -in codesign0
+openssl x509 -inform DER -fingerprint -sha1 -modulus -text -noout -in codesign0
 ```
 
 - 解析 xxx.app 中的 Info.plist 文件得到 bundle id 和 名称以及图标路径
